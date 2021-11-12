@@ -1,0 +1,360 @@
+﻿[
+  {
+    "name": "Pantheon of the Master",
+    "number": 1,
+    "bosses": [
+      {
+        "name": "Vengefly King",
+        "scene": "GG_Vengefly"
+      },
+      {
+        "name": "Gruz Mother",
+        "scene": "GG_Gruz_Mother"
+      },
+      {
+        "name": "False Knight",
+        "scene": "GG_False_Knight"
+      },
+      {
+        "name": "Massive Moss Charger",
+        "scene": "GG_Mega_Moss_Charger"
+      },
+      {
+        "name": "Hornet (Protector)",
+        "scene": "GG_Hornet_1"
+      },
+      {
+        "name": "Gorb",
+        "scene": "GG_Ghost_Gorb"
+      },
+      {
+        "name": "Dung Defender",
+        "scene": "GG_Dung_Defender"
+      },
+      {
+        "name": "Soul Warrior",
+        "scene": "GG_Mage_Knight"
+      },
+      {
+        "name": "Brooding Mawlek",
+        "scene": "GG_Brooding_Mawlek"
+      },
+      {
+        "name": "Brothers Oro & Mato",
+        "scene": "GG_Nailmasters"
+      }
+    ]
+  },
+  {
+    "name": "Pantheon of the Artist",
+    "number": 2,
+    "bosses": [
+      {
+        "name": "Xero",
+        "scene": "GG_Ghost_Xero"
+      },
+      {
+        "name": "Crystal Guardian",
+        "scene": "GG_Crystal_Guardian"
+      },
+      {
+        "name": "Soul Master",
+        "scene": "GG_Soul_Master"
+      },
+      {
+        "name": "Oblobbles",
+        "scene": "GG_Oblobbles"
+      },
+      {
+        "name": "Mantis Lords",
+        "scene": "GG_Mantis_Lords"
+      },
+      {
+        "name": "Marmu",
+        "scene": "GG_Ghost_Marmu"
+      },
+      {
+        "name": "Nosk",
+        "scene": "GG_Nosk"
+      },
+      {
+        "name": "Flukemarm",
+        "scene": "GG_Flukemarm"
+      },
+      {
+        "name": "Broken Vessel",
+        "scene": "GG_Broken_Vessel"
+      },
+      {
+        "name": "Paintmaster Sheo",
+        "scene": "GG_Painter"
+      }
+    ]
+  },
+  {
+    "name": "Pantheon of the Sage",
+    "number": 3,
+    "bosses": [
+      {
+        "name": "Hive Knight",
+        "scene": "GG_Hive_Knight"
+      },
+      {
+        "name": "Elder Hu",
+        "scene": "GG_Ghost_Hu"
+      },
+      {
+        "name": "The Collector",
+        "scene": "GG_Collector"
+      },
+      {
+        "name": "God Tamer",
+        "scene": "GG_God_Tamer"
+      },
+      {
+        "name": "Troupe Master Grimm",
+        "scene": "GG_Grimm"
+      },
+      {
+        "name": "Galien",
+        "scene": "GG_Ghost_Galien"
+      },
+      {
+        "name": "Grey Prince Zote",
+        "scene": "GG_Grey_Prince_Zote"
+      },
+      {
+        "name": "Uumuu",
+        "scene": "GG_Uumuu"
+      },
+      {
+        "name": "Hornet (Sentinel)",
+        "scene": "GG_Hornet_2"
+      },
+      {
+        "name": "Great Nailsage Sly",
+        "scene": "GG_Sly"
+      }
+    ]
+  },
+  {
+    "name": "Pantheon of the Knight",
+    "number": 4,
+    "bosses": [
+      {
+        "name": "Enraged Guardian",
+        "scene": "GG_Crystal_Guardian_2"
+      },
+      {
+        "name": "Lost Kin",
+        "scene": "GG_Lost_Kin"
+      },
+      {
+        "name": "No Eyes",
+        "scene": "GG_Ghost_No_Eyes"
+      },
+      {
+        "name": "Traitor Lord",
+        "scene": "GG_Traitor_Lord"
+      },
+      {
+        "name": "White Defender",
+        "scene": "GG_White_Defender"
+      },
+      {
+        "name": "Failed Champion",
+        "scene": "GG_Failed_Champion"
+      },
+      {
+        "name": "Markoth",
+        "scene": "GG_Ghost_Markoth"
+      },
+      {
+        "name": "Watcher Knight",
+        "scene": "GG_Watcher_Knights"
+      },
+      {
+        "name": "Soul Tyrant",
+        "scene": "GG_Soul_Tyrant"
+      },
+      {
+        "name": "Pure Vessel",
+        "scene": "GG_Hollow_Knight"
+      }
+    ]
+  },
+  {
+    "name": "Pantheon of Hallownest",
+    "number": 5,
+    "bosses": [
+      {
+        "name": "Vengefly King",
+        "scene": "GG_Vengefly_V"
+      },
+      {
+        "name": "Gruz Mother",
+        "scene": "GG_Gruz_Mother_V"
+      },
+      {
+        "name": "False Knight",
+        "scene": "GG_False_Knight"
+      },
+      {
+        "name": "Massive Moss Charger",
+        "scene": "GG_Mega_Moss_Charger"
+      },
+      {
+        "name": "Hornet (Protector)",
+        "scene": "GG_Hornet_1"
+      },
+      {
+        "name": "Gorb",
+        "scene": "GG_Ghost_Gorb_V"
+      },
+      {
+        "name": "Dung Defender",
+        "scene": "GG_Dung_Defender"
+      },
+      {
+        "name": "Soul Warrior",
+        "scene": "GG_Mage_Knight_V"
+      },
+      {
+        "name": "Brooding Mawlek",
+        "scene": "GG_Brooding_Mawlek_V"
+      },
+      {
+        "name": "Brothers Oro & Mato",
+        "scene": "GG_Nailmasters"
+      },
+      {
+        "name": "Xero",
+        "scene": "GG_Ghost_Xero_V"
+      },
+      {
+        "name": "Crystal Guardian",
+        "scene": "GG_Crystal_Guardian"
+      },
+      {
+        "name": "Soul Master",
+        "scene": "GG_Soul_Master"
+      },
+      {
+        "name": "Oblobbles",
+        "scene": "GG_Oblobbles"
+      },
+      {
+        "name": "Sisters of Battle",
+        "scene": "GG_Mantis_Lords_V"
+      },
+      {
+        "name": "Marmu",
+        "scene": "GG_Ghost_Marmu_V"
+      },
+      {
+        "name": "Flukemarm",
+        "scene": "GG_Flukemarm"
+      },
+      {
+        "name": "Broken Vessel",
+        "scene": "GG_Broken_Vessel"
+      },
+      {
+        "name": "Galien",
+        "scene": "GG_Ghost_Galien"
+      },
+      {
+        "name": "Paintmaster Sheo",
+        "scene": "GG_Painter"
+      },
+      {
+        "name": "Hive Knight",
+        "scene": "GG_Hive_Knight"
+      },
+      {
+        "name": "Elder Hu",
+        "scene": "GG_Ghost_Hu"
+      },
+      {
+        "name": "The Collector",
+        "scene": "GG_Collector_V"
+      },
+      {
+        "name": "God Tamer",
+        "scene": "GG_God_Tamer"
+      },
+      {
+        "name": "Troupe Master Grimm",
+        "scene": "GG_Grimm"
+      },
+      {
+        "name": "Watcher Knight",
+        "scene": "GG_Watcher_Knights"
+      },
+      {
+        "name": "Uumuu",
+        "scene": "GG_Uumuu_V"
+      },
+      {
+        "name": "Winged Nosk",
+        "scene": "GG_Nosk_Hornet"
+      },
+      {
+        "name": "Great Nailsage Sly",
+        "scene": "GG_Sly"
+      },
+      {
+        "name": "Hornet (Sentinel)",
+        "scene": "GG_Hornet_2"
+      },
+      {
+        "name": "Enraged Guardian",
+        "scene": "GG_Crystal_Guardian_2"
+      },
+      {
+        "name": "Lost Kin",
+        "scene": "GG_Lost_Kin"
+      },
+      {
+        "name": "No Eyes",
+        "scene": "GG_Ghost_No_Eyes_V"
+      },
+      {
+        "name": "Traitor Lord",
+        "scene": "GG_Traitor_Lord"
+      },
+      {
+        "name": "White Defender",
+        "scene": "GG_White_Defender"
+      },
+      {
+        "name": "Soul Tyrant",
+        "scene": "GG_Soul_Tyrant"
+      },
+      {
+        "name": "Markoth",
+        "scene": "GG_Ghost_Markoth_V"
+      },
+      {
+        "name": "Grey Prince Zote",
+        "scene": "GG_Grey_Prince_Zote"
+      },
+      {
+        "name": "Failed Champion",
+        "scene": "GG_Failed_Champion"
+      },
+      {
+        "name": "Nightmare King Grimm",
+        "scene": "GG_Grimm_Nightmare"
+      },
+      {
+        "name": "Pure Vessel",
+        "scene": "GG_Hollow_Knight"
+      },
+      {
+        "name": "Absolute Radiance",
+        "scene": "GG_Radiance"
+      }
+    ]
+  }
+]
