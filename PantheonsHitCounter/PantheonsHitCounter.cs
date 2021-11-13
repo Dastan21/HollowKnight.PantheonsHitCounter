@@ -6,9 +6,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Modding;
-using On.InControl;
 using PantheonsHitCounter.UI;
-using UnityEngine;
 
 namespace PantheonsHitCounter
 {
@@ -30,7 +28,7 @@ namespace PantheonsHitCounter
         private static readonly string[] CompletedScene = { "GG_End_Sequence", "End_Game_Completion" };
         
         public PantheonsHitCounter() : base("Pantheons Hit Counter") {}
-        public override string GetVersion() => "1.0.0";
+        public override string GetVersion() => "1.0.1";
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
         public void OnLoadLocal(LocalData data) => _localData = data;

@@ -75,7 +75,7 @@ namespace PantheonsHitCounter.UI
                 var bossPanel = _panel.GetPanel("PHC-BossSplit-" + b);
                 var boss = bosses[b + currentBossNumber];
                 var bossImg = ResourcesLoader.Instance.images[boss.name.Replace(" ", "_")];
-                bossPanel.GetImage("BossSplitSelected").SetActive(b == GetSelectedSplit(pantheon.bossNumber, bosses.Count));
+                bossPanel.GetImage("BossSplitSelected").SetActive(b == GetSelectedSplit(pantheon.bossNumber, bosses.Count) && _panel.Active);
                 bossPanel.GetImage("BossImage").UpdateImage(bossImg, new Rect(0, 0, bossImg.width, bossImg.height));
                 bossPanel.GetText("BossName").UpdateText(boss.name);
                 bossPanel.GetText("BossHits").UpdateText(boss.hits + "");

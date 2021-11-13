@@ -13,7 +13,7 @@ namespace PantheonsHitCounter {
         private static MenuScreen _modsMenu;
         public static MenuOptionHorizontal pantheonSelector, stateSelector;
         private static ModToggleDelegates _stateToggle;
-        private static int _selectedPantheon = 0;
+        private static int _selectedPantheon;
         private static readonly string[] ToggleState = { "Disabled", "Enabled" };
 
         private static void AddMenuOptions(ContentArea area)
