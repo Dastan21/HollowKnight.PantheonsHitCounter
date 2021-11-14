@@ -1,5 +1,7 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Modding;
 using Modding.Menu;
 using Modding.Menu.Config;
@@ -15,6 +17,13 @@ namespace PantheonsHitCounter {
         private static ModToggleDelegates _stateToggle;
         private static int _selectedPantheon;
         private static readonly string[] ToggleState = { "Disabled", "Enabled" };
+
+        public static bool isKeyboardBindsShown = true;
+        public static bool isControllerBindsShown = true;
+
+        private static List<GameObject> ControllerKeyBindOptions = new List<GameObject>();
+        private static List<GameObject> KeyBoardKeyBindOptions = new List<GameObject>();
+        private static List<GameObject> AllMenuOptions = new List<GameObject>();
 
         private static void AddMenuOptions(ContentArea area)
         {
@@ -48,6 +57,11 @@ namespace PantheonsHitCounter {
 
         private static void AddResetOptions(ContentArea area)
         {
+            var layout = area.Layout as RegularGridLayout;
+                var l = layout.ItemAdvance;
+                l.x = new RelLength(750f);
+                layout.ChangeColumns(2, 0.5f, l, 0.5f);
+				
             area.AddHorizontalOption(
                 "Pantheons",
                 new HorizontalOptionConfig
@@ -56,17 +70,14 @@ namespace PantheonsHitCounter {
                     Description = new DescriptionInfo
                     {
                         Text = "Select the pantheon to reset its PBs",
-                        Style = DescriptionStyle.HorizOptionSingleLineVanillaStyle
                     },
                     Options = PantheonsHitCounter.instance.pantheons.Select(s => s.name).ToArray(),
                     ApplySetting = (_, i) => _selectedPantheon = i,
                     RefreshSetting = (s, _) => s.optionList.SetOptionTo(_selectedPantheon),
                     CancelAction = GoToModListMenu,
-                    Style = HorizontalOptionStyle.VanillaStyle
                 },
                 out pantheonSelector
             );
-            
             area.AddMenuButton(
                 "Reset",
                 new MenuButtonConfig
@@ -80,20 +91,41 @@ namespace PantheonsHitCounter {
                     SubmitAction = Reset,
                     Proceed = true,
                     Style = MenuButtonStyle.VanillaStyle
-                }
+                }, out var ResetButton
             );
-        }
 
+            l.x = new RelLength(1920f);
+            layout.ChangeColumns(1, 0.25f, l, 0.5f);
+
+        }
         private static void AddBindingsOptions(ContentArea area)
         {
-            area.AddTextPanel("SectionBindings",
-                new RelVector2(new Vector2(850f, 105f)),
-                new TextPanelConfig{
-                    Text = "Keyboard bindings",
-                    Size = 55,
-                    Font = TextPanelConfig.TextFont.TrajanBold,
-                    Anchor = TextAnchor.MiddleCenter
-                });
+            KeyBoardKeyBindOptions.Clear();
+            ControllerKeyBindOptions.Clear();
+            
+            area.AddMenuButton("SectionBindingsKeyboard",
+                new MenuButtonConfig
+                {
+                    CancelAction = GoToModListMenu,
+                    Description = new DescriptionInfo
+                    {
+                        Text = "Click here to bind keyboard buttons",
+                    },
+                    Label = "Keyboard bindings",
+                    Proceed = false,
+                    SubmitAction = _ =>
+                    {
+                        isKeyboardBindsShown = !isKeyboardBindsShown;
+                        foreach (GameObject keyBind in KeyBoardKeyBindOptions)
+                        {
+                            keyBind.SetActive(isKeyboardBindsShown);
+                        }
+
+                        Reorder();
+                    }
+                }, out var keyboardKeybindButton);
+            
+            AllMenuOptions.Add(keyboardKeybindButton.gameObject);
             
             area.AddKeybind(
                 "ToggleCounterBind",
@@ -102,8 +134,10 @@ namespace PantheonsHitCounter {
                 {
                     Label = "Toggle counter",
                     CancelAction = GoToModListMenu,
-                }
+                }, out var KeyboardCounterButton
             );
+            KeyBoardKeyBindOptions.Add(KeyboardCounterButton.gameObject);
+            AllMenuOptions.Add(KeyboardCounterButton.gameObject);
             
             area.AddKeybind(
                 "NextBossBind",
@@ -112,8 +146,10 @@ namespace PantheonsHitCounter {
                 {
                     Label = "Next boss",
                     CancelAction = GoToModListMenu,
-                }
+                }, out var KeyboardNextBossButton
             );
+            KeyBoardKeyBindOptions.Add(KeyboardNextBossButton.gameObject);
+            AllMenuOptions.Add(KeyboardNextBossButton.gameObject);
             
             area.AddKeybind(
                 "PreviousBossBind",
@@ -122,20 +158,36 @@ namespace PantheonsHitCounter {
                 {
                     Label = "Previous boss",
                     CancelAction = GoToModListMenu,
-                }
+                }, out var KeyboardPreviousBossButton
             );
-
+            KeyBoardKeyBindOptions.Add(KeyboardPreviousBossButton.gameObject);
+            AllMenuOptions.Add(KeyboardPreviousBossButton.gameObject);
+            
             try
             {
-                area.AddTextPanel("SectionBindingsController",
-                    new RelVector2(new Vector2(850f, 105f)),
-                    new TextPanelConfig{
-                        Text = "Controller bindings",
-                        Size = 55,
-                        Font = TextPanelConfig.TextFont.TrajanBold,
-                        Anchor = TextAnchor.MiddleCenter
-                    });
+                area.AddMenuButton("SectionBindingsController",
+                    new MenuButtonConfig
+                    {
+                        CancelAction = GoToModListMenu,
+                        Description = new DescriptionInfo
+                        {
+                            Text = "Click here to bind controller buttons",
+                        },
+                        Label = "Controller bindings",
+                        Proceed = false,
+                        SubmitAction = _ =>
+                        {
+                            isControllerBindsShown = !isControllerBindsShown;
+                            foreach (GameObject keyBind in ControllerKeyBindOptions)
+                            {
+                                keyBind.SetActive(isControllerBindsShown);
+                            }
 
+                            Reorder();
+                        }
+                    }, out var ControllerKeybindButton);
+                AllMenuOptions.Add(ControllerKeybindButton.gameObject);
+                
                 area.AddButtonBind(
                     "ToggleCounterBindJoy",
                     PantheonsHitCounter.instance.globalData.buttonbinds.toggleCounter,
@@ -144,8 +196,10 @@ namespace PantheonsHitCounter {
                         Label = "Toggle counter",
                         CancelAction = GoToModListMenu,
                     },
-                    out _
+                    out var ControllerCounterButton
                 );
+                ControllerKeyBindOptions.Add(ControllerCounterButton.gameObject);
+                AllMenuOptions.Add(ControllerCounterButton.gameObject);
 
                 area.AddButtonBind(
                     "NextBossBindJoy",
@@ -155,9 +209,11 @@ namespace PantheonsHitCounter {
                         Label = "Next boss",
                         CancelAction = GoToModListMenu,
                     },
-                    out _
+                    out var ControllerNextBossButton
                 );
-
+                ControllerKeyBindOptions.Add(ControllerNextBossButton.gameObject);
+                AllMenuOptions.Add(ControllerNextBossButton.gameObject);
+                
                 area.AddButtonBind(
                     "PreviousBossBindJoy",
                     PantheonsHitCounter.instance.globalData.buttonbinds.previousBossSplit,
@@ -166,8 +222,11 @@ namespace PantheonsHitCounter {
                         Label = "Previous boss",
                         CancelAction = GoToModListMenu,
                     },
-                    out _
+                    out var ControllerPreviousBossButton
                 );
+                ControllerKeyBindOptions.Add(ControllerPreviousBossButton.gameObject);
+                AllMenuOptions.Add(ControllerPreviousBossButton.gameObject);
+                
             } catch (Exception) { /**/ }
         }
 
@@ -278,7 +337,7 @@ namespace PantheonsHitCounter {
             
             GoToModListMenu();
         }
-        
+
         private static void Reset(Object _) => Reset();
         private static void Reset()
         {
@@ -290,6 +349,24 @@ namespace PantheonsHitCounter {
                 CounterUI.UpdateUI(pantheon);
             
             PantheonsHitCounter.instance.Log($"PBs for {pantheon.name} reset");
+        }
+
+        private static void Reorder()
+        {
+            int Index = 2;
+            RelVector2 ItemAdvance = new RelVector2(new Vector2(0.0f, -105f));
+            AnchoredPosition Start = new AnchoredPosition
+            {
+                ChildAnchor = new Vector2(0.5f, 1f),
+                ParentAnchor = new Vector2(0.5f, 1f),
+                Offset = default
+            };
+
+            foreach (GameObject menuOption in AllMenuOptions.Where(x => x.activeInHierarchy))
+            {
+                (Start + ItemAdvance * new Vector2Int(Index, Index)).Reposition(menuOption.gameObject.GetComponent<RectTransform>());
+                Index += 1;
+            }
         }
     }
 }
