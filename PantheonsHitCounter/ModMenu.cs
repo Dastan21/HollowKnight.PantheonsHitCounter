@@ -172,26 +172,26 @@ namespace PantheonsHitCounter {
             KeyBoardKeyBindOptions.Add(KeyboardPreviousBossButton.gameObject);
             AllMenuOptions.Add(KeyboardPreviousBossButton.gameObject);
             
+            area.AddMenuButton("SectionBindingsController",
+                new MenuButtonConfig
+                {
+                    CancelAction = GoToModListMenu,
+                    Description = new DescriptionInfo
+                    {
+                        Text = "Click here to bind controller buttons",
+                    },
+                    Label = "Controller bindings",
+                    Proceed = false,
+                    SubmitAction = _ =>
+                    {
+                        HideShowControllerBinds();
+                        Reorder(true);
+                    }
+                }, out var ControllerKeybindButton);
+            AllMenuOptions.Add(ControllerKeybindButton.gameObject);
+
             try
             {
-                area.AddMenuButton("SectionBindingsController",
-                    new MenuButtonConfig
-                    {
-                        CancelAction = GoToModListMenu,
-                        Description = new DescriptionInfo
-                        {
-                            Text = "Click here to bind controller buttons",
-                        },
-                        Label = "Controller bindings",
-                        Proceed = false,
-                        SubmitAction = _ =>
-                        {
-                            HideShowControllerBinds();
-                            Reorder(true);
-                        }
-                    }, out var ControllerKeybindButton);
-                AllMenuOptions.Add(ControllerKeybindButton.gameObject);
-                
                 area.AddButtonBind(
                     "ToggleCounterBindJoy",
                     PantheonsHitCounter.instance.globalData.buttonbinds.toggleCounter,
@@ -204,7 +204,14 @@ namespace PantheonsHitCounter {
                 );
                 ControllerKeyBindOptions.Add(ControllerCounterButton.gameObject);
                 AllMenuOptions.Add(ControllerCounterButton.gameObject);
+            }
+            catch (Exception e)
+            {
+                PantheonsHitCounter.instance.LogError(e.ToString());
+            }
 
+            try
+            {
                 area.AddButtonBind(
                     "NextBossBindJoy",
                     PantheonsHitCounter.instance.globalData.buttonbinds.nextBossSplit,
@@ -217,7 +224,14 @@ namespace PantheonsHitCounter {
                 );
                 ControllerKeyBindOptions.Add(ControllerNextBossButton.gameObject);
                 AllMenuOptions.Add(ControllerNextBossButton.gameObject);
-                
+            }
+            catch (Exception e)
+            {
+                PantheonsHitCounter.instance.LogError(e.ToString());
+            }
+
+            try
+            {
                 area.AddButtonBind(
                     "PreviousBossBindJoy",
                     PantheonsHitCounter.instance.globalData.buttonbinds.previousBossSplit,
@@ -230,10 +244,14 @@ namespace PantheonsHitCounter {
                 );
                 ControllerKeyBindOptions.Add(ControllerPreviousBossButton.gameObject);
                 AllMenuOptions.Add(ControllerPreviousBossButton.gameObject);
-                
-            } catch (Exception) { /**/ }
-            
-            
+
+            }
+            catch (Exception e)
+            {
+                PantheonsHitCounter.instance.LogError(e.ToString());
+            }
+
+
             HideShowControllerBinds();
             HideShowKeyboardBinds();
         }
