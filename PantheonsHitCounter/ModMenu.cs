@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Modding;
 using Modding.Menu;
 using Modding.Menu.Config;
@@ -12,21 +10,22 @@ using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace PantheonsHitCounter {
-    public class ModMenu {
+    public class ModMenu
+    {
         private static MenuScreen _modsMenu;
-        internal static MenuScreen MainMenu;
-        public static MenuOptionHorizontal pantheonSelector, stateSelector;
+        public static MenuScreen mainMenu;
+        private static MenuOptionHorizontal _pantheonSelector, _stateSelector;
         private static ModToggleDelegates _stateToggle;
         private static int _selectedPantheon;
         private static readonly string[] ToggleState = { "Disabled", "Enabled" };
 
         public static bool isKeyboardBindsShown = true;
         public static bool isControllerBindsShown = true;
-        public static bool NeedReorder = true;
+        public static bool needReorder = true;
 
-        private static List<GameObject> ControllerKeyBindOptions = new List<GameObject>();
-        private static List<GameObject> KeyBoardKeyBindOptions = new List<GameObject>();
-        private static List<GameObject> AllMenuOptions = new List<GameObject>();
+        private static readonly List<GameObject> ControllerKeyBindOptions = new List<GameObject>();
+        private static readonly List<GameObject> KeyBoardKeyBindOptions = new List<GameObject>();
+        private static readonly List<GameObject> AllMenuOptions = new List<GameObject>();
 
         private static void AddMenuOptions(ContentArea area)
         {
@@ -54,16 +53,16 @@ namespace PantheonsHitCounter {
                     CancelAction = GoToModListMenu,
                     Style = HorizontalOptionStyle.VanillaStyle
                 },
-                out stateSelector
+                out _stateSelector
             );
         }
 
         private static void AddResetOptions(ContentArea area)
         {
-            var layout = area.Layout as RegularGridLayout; //get the layout
+            if (!(area.Layout is RegularGridLayout layout)) return;
             var l = layout.ItemAdvance; 
-            l.x = new RelLength(750f); //change width of each column to make it smaller
-            layout.ChangeColumns(2, 0.5f, l, 0.5f); //change no of columns
+            l.x = new RelLength(750f);
+            layout.ChangeColumns(2, 0.5f, l);
             
             area.AddHorizontalOption(
                 "Pantheons",
@@ -72,48 +71,48 @@ namespace PantheonsHitCounter {
                     Label = "",
                     Description = new DescriptionInfo
                     {
-                        Text = "Select the pantheon to reset its PBs",
+                        Text = "Select a pantheon to reset its PBs",
                     },
                     Options = PantheonsHitCounter.instance.pantheons.Select(s => s.name).ToArray(),
                     ApplySetting = (_, i) => _selectedPantheon = i,
                     RefreshSetting = (s, _) => s.optionList.SetOptionTo(_selectedPantheon),
                     CancelAction = GoToModListMenu,
                 },
-                out pantheonSelector
+                out _pantheonSelector
             );
 
-            //move left cursor
-            pantheonSelector.gameObject.transform.Find("CursorLeft").GetComponent<RectTransform>().anchoredPosition = new Vector2(280f, 0f);
-            
-            //move description
-            pantheonSelector.gameObject.transform.Find("Description").GetComponent<RectTransform>().anchoredPosition = new Vector2(480f, 0f);
+            _pantheonSelector.gameObject.transform.Find("CursorLeft").GetComponent<RectTransform>().anchoredPosition = new Vector2(280f, 0f);
+            _pantheonSelector.gameObject.transform.Find("Description").GetComponent<RectTransform>().anchoredPosition = new Vector2(480f, 0f);
 
-            GameObject TextObj = pantheonSelector.gameObject.transform.Find("Text").gameObject;
-
-            //make text obj smaller so text can left allign properly
-            TextObj.GetComponent<RectTransform>().sizeDelta = new Vector2(-700, 0);
-            TextObj.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+            //make text obj smaller so text can left align properly
+            var textObj = _pantheonSelector.gameObject.transform.Find("Text").gameObject;
+            textObj.GetComponent<RectTransform>().sizeDelta = new Vector2(-700, 0);
+            textObj.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
             
-                area.AddMenuButton(
+            area.AddMenuButton(
                 "Reset",
                 new MenuButtonConfig
                 {
                     Label = "Reset",
-                    Description = new DescriptionInfo
-                    {
-                        Text = "Reset PBs of the pantheon selected above (works only in game)"
-                    },
                     CancelAction = GoToModListMenu,
                     SubmitAction = Reset,
                     Proceed = true,
                     Style = MenuButtonStyle.VanillaStyle
-                }, out var ResetButton
+                }, out _
             );
-
-            //make columns bigger again
+            
             l.x = new RelLength(1920f);
-            layout.ChangeColumns(1, 0.25f, l, 0.5f);//change number of columns
-
+            layout.ChangeColumns(1, 0.25f, l);
+            
+            area.AddTextPanel("Note",
+                new RelVector2(new Vector2(850f, 60f)),
+                new TextPanelConfig{
+                    Text = "Note: Reset works only in-game",
+                    Size = 25,
+                    Font = TextPanelConfig.TextFont.TrajanRegular,
+                    Anchor = TextAnchor.MiddleCenter
+                }
+            );
         }
         private static void AddBindingsOptions(ContentArea area)
         {
@@ -143,10 +142,10 @@ namespace PantheonsHitCounter {
                 {
                     Label = "Toggle counter",
                     CancelAction = GoToModListMenu,
-                }, out var KeyboardCounterButton
+                }, out var keyboardCounterButton
             );
-            KeyBoardKeyBindOptions.Add(KeyboardCounterButton.gameObject);
-            AllMenuOptions.Add(KeyboardCounterButton.gameObject);
+            KeyBoardKeyBindOptions.Add(keyboardCounterButton.gameObject);
+            AllMenuOptions.Add(keyboardCounterButton.gameObject);
             
             area.AddKeybind(
                 "NextBossBind",
@@ -155,10 +154,10 @@ namespace PantheonsHitCounter {
                 {
                     Label = "Next boss",
                     CancelAction = GoToModListMenu,
-                }, out var KeyboardNextBossButton
+                }, out var keyboardNextBossButton
             );
-            KeyBoardKeyBindOptions.Add(KeyboardNextBossButton.gameObject);
-            AllMenuOptions.Add(KeyboardNextBossButton.gameObject);
+            KeyBoardKeyBindOptions.Add(keyboardNextBossButton.gameObject);
+            AllMenuOptions.Add(keyboardNextBossButton.gameObject);
             
             area.AddKeybind(
                 "PreviousBossBind",
@@ -167,10 +166,10 @@ namespace PantheonsHitCounter {
                 {
                     Label = "Previous boss",
                     CancelAction = GoToModListMenu,
-                }, out var KeyboardPreviousBossButton
+                }, out var keyboardPreviousBossButton
             );
-            KeyBoardKeyBindOptions.Add(KeyboardPreviousBossButton.gameObject);
-            AllMenuOptions.Add(KeyboardPreviousBossButton.gameObject);
+            KeyBoardKeyBindOptions.Add(keyboardPreviousBossButton.gameObject);
+            AllMenuOptions.Add(keyboardPreviousBossButton.gameObject);
             
             try
             {
@@ -189,8 +188,8 @@ namespace PantheonsHitCounter {
                             HideShowControllerBinds();
                             Reorder(true);
                         }
-                    }, out var ControllerKeybindButton);
-                AllMenuOptions.Add(ControllerKeybindButton.gameObject);
+                    }, out var controllerKeybindButton);
+                AllMenuOptions.Add(controllerKeybindButton.gameObject);
                 
                 area.AddButtonBind(
                     "ToggleCounterBindJoy",
@@ -200,10 +199,10 @@ namespace PantheonsHitCounter {
                         Label = "Toggle counter",
                         CancelAction = GoToModListMenu,
                     },
-                    out var ControllerCounterButton
+                    out var controllerCounterButton
                 );
-                ControllerKeyBindOptions.Add(ControllerCounterButton.gameObject);
-                AllMenuOptions.Add(ControllerCounterButton.gameObject);
+                ControllerKeyBindOptions.Add(controllerCounterButton.gameObject);
+                AllMenuOptions.Add(controllerCounterButton.gameObject);
 
                 area.AddButtonBind(
                     "NextBossBindJoy",
@@ -213,10 +212,10 @@ namespace PantheonsHitCounter {
                         Label = "Next boss",
                         CancelAction = GoToModListMenu,
                     },
-                    out var ControllerNextBossButton
+                    out var controllerNextBossButton
                 );
-                ControllerKeyBindOptions.Add(ControllerNextBossButton.gameObject);
-                AllMenuOptions.Add(ControllerNextBossButton.gameObject);
+                ControllerKeyBindOptions.Add(controllerNextBossButton.gameObject);
+                AllMenuOptions.Add(controllerNextBossButton.gameObject);
                 
                 area.AddButtonBind(
                     "PreviousBossBindJoy",
@@ -226,10 +225,10 @@ namespace PantheonsHitCounter {
                         Label = "Previous boss",
                         CancelAction = GoToModListMenu,
                     },
-                    out var ControllerPreviousBossButton
+                    out var controllerPreviousBossButton
                 );
-                ControllerKeyBindOptions.Add(ControllerPreviousBossButton.gameObject);
-                AllMenuOptions.Add(ControllerPreviousBossButton.gameObject);
+                ControllerKeyBindOptions.Add(controllerPreviousBossButton.gameObject);
+                AllMenuOptions.Add(controllerPreviousBossButton.gameObject);
                 
             } catch (Exception) { /**/ }
             
@@ -243,12 +242,12 @@ namespace PantheonsHitCounter {
             RefreshOptions();
         }
 
-        private static void GoToModListMenu() => (UIManager.instance).UIGoToDynamicMenu(_modsMenu);
+        private static void GoToModListMenu() => UIManager.instance.UIGoToDynamicMenu(_modsMenu);
 
         public static void RefreshOptions()
         {
-            if(stateSelector != null) stateSelector.menuSetting.RefreshValueFromGameSettings();
-            if(pantheonSelector != null) pantheonSelector.menuSetting.RefreshValueFromGameSettings();
+            if(_stateSelector != null) _stateSelector.menuSetting.RefreshValueFromGameSettings();
+            if(_pantheonSelector != null) _pantheonSelector.menuSetting.RefreshValueFromGameSettings();
         }
 
         public static MenuScreen CreateMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle)
@@ -261,7 +260,7 @@ namespace PantheonsHitCounter {
             ControllerKeyBindOptions.Clear();
 
             var title = PantheonsHitCounter.instance.GetName();
-            MainMenu = new MenuBuilder(UIManager.instance.UICanvas.gameObject, title)
+            mainMenu = new MenuBuilder(UIManager.instance.UICanvas.gameObject, title)
                 .CreateTitle(title, MenuTitleStyle.vanillaStyle)
                 .CreateContentPane(RectTransformData.FromSizeAndPos(
                     new RelVector2(new Vector2(1920f, 803f)),
@@ -336,8 +335,8 @@ namespace PantheonsHitCounter {
                     RegularGridLayout.CreateVerticalLayout(105f),
                     AddMenuOptions
             )).Build();
-
-                return MainMenu;
+            
+            return mainMenu;
         }
 
         private static void Apply(Object _) => Apply();
@@ -366,40 +365,34 @@ namespace PantheonsHitCounter {
         private static void HideShowKeyboardBinds()
         {
             isKeyboardBindsShown = !isKeyboardBindsShown;
-            foreach (GameObject keyBind in KeyBoardKeyBindOptions)
-            {
+            foreach (var keyBind in KeyBoardKeyBindOptions)
                 keyBind.SetActive(isKeyboardBindsShown);
-            }
         }
         private static void HideShowControllerBinds()
         {
             isControllerBindsShown = !isControllerBindsShown;
-            foreach (GameObject keyBind in ControllerKeyBindOptions)
-            {
+            foreach (var keyBind in ControllerKeyBindOptions)
                 keyBind.SetActive(isControllerBindsShown);
-            }
         }
         
-        public static void Reorder(bool NotInOnHook = false)
+        public static void Reorder(bool notInOnHook = false)
         {
-            if (!NotInOnHook)
-            {
-                if (!NeedReorder) return;
-            }
+            if (!notInOnHook && !needReorder) return;
             
-            int Index = 2;
-            RelVector2 ItemAdvance = new RelVector2(new Vector2(0.0f, -105f));
-            AnchoredPosition Start = new AnchoredPosition
+            var index = 2;
+            var itemAdvance = new RelVector2(new Vector2(0.0f, -105f));
+            var noteItem = new RelVector2(new Vector2(0.0f, -105f));
+            var start = new AnchoredPosition
             {
                 ChildAnchor = new Vector2(0.5f, 1f),
                 ParentAnchor = new Vector2(0.5f, 1f),
                 Offset = default
             };
 
-            foreach (GameObject menuOption in AllMenuOptions.Where(x => x.activeInHierarchy))
+            foreach (var menuOption in AllMenuOptions.Where(x => x.activeInHierarchy))
             {
-                (Start + ItemAdvance * new Vector2Int(Index, Index)).Reposition(menuOption.gameObject.GetComponent<RectTransform>());
-                Index += 1;
+                (start + noteItem + itemAdvance * new Vector2Int(index, index)).Reposition(menuOption.gameObject.GetComponent<RectTransform>());
+                index += 1;
             }
         }
     }

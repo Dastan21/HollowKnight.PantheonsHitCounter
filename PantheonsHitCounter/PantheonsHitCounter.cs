@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Modding;
 using PantheonsHitCounter.UI;
-using UnityEngine;
 
 namespace PantheonsHitCounter
 {
@@ -56,31 +55,27 @@ namespace PantheonsHitCounter
         }
         
 
-        private IEnumerator ReorderButtons(On.UIManager.orig_ShowMenu orig, UIManager self, MenuScreen menu)
+        private static IEnumerator ReorderButtons(On.UIManager.orig_ShowMenu orig, UIManager self, MenuScreen menu)
         {
-            if (menu == ModMenu.MainMenu)
-            {
-                //need to do this probably something about components not being active in hierarchy and so the logic doesnt work
+            //need to do this probably something about components not being active in hierarchy and so the logic doesnt work
+            if (menu == ModMenu.mainMenu)
                 GameManager.instance.StartCoroutine(ReorderAfterFrame());
-            }
             yield return orig(self, menu);
 
         }
 
-        private IEnumerator ReorderAfterFrame()
+        private static IEnumerator ReorderAfterFrame()
         {
             yield return null;
-            
             ModMenu.Reorder();
-
-            ModMenu.NeedReorder = false;
+            ModMenu.needReorder = false;
 
         }
 
         private static IEnumerator OnQuitToMenu(On.QuitToMenu.orig_Start orig, QuitToMenu self)
         {
             ResourcesLoader.Instance.Destroy();
-            ModMenu.NeedReorder = true;
+            ModMenu.needReorder = true;
             ModMenu.isControllerBindsShown = !ModMenu.isControllerBindsShown;
             ModMenu.isKeyboardBindsShown = !ModMenu.isKeyboardBindsShown;
             return orig(self);
