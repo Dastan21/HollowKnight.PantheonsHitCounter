@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Modding;
 using PantheonsHitCounter.UI;
+using UnityEngine;
 
 namespace PantheonsHitCounter
 {
@@ -40,21 +41,48 @@ namespace PantheonsHitCounter
         public override void Initialize()
         {
             instance = this;
-            
+
             ModHooks.SavegameLoadHook += LoadPBs;
             On.QuitToMenu.Start += OnQuitToMenu;
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
             ModHooks.TakeHealthHook += OnHitTaken;
             ModHooks.HeroUpdateHook += OnHeroUpdate;
-            
+
             ResourcesLoader.Instance.LoadResources();
-            
+
             LoadPantheonsBosses();
+
+            On.UIManager.ShowMenu += ReorderButtons;
+        }
+        
+
+        private IEnumerator ReorderButtons(On.UIManager.orig_ShowMenu orig, UIManager self, MenuScreen menu)
+        {
+            if (menu == ModMenu.MainMenu)
+            {
+                //need to do this probably something about components not being active in hierarchy and so the logic doesnt work
+                GameManager.instance.StartCoroutine(ReorderAfterFrame());
+            }
+            yield return orig(self, menu);
+
+        }
+
+        private IEnumerator ReorderAfterFrame()
+        {
+            yield return null;
+            
+            ModMenu.Reorder();
+
+            ModMenu.NeedReorder = false;
+
         }
 
         private static IEnumerator OnQuitToMenu(On.QuitToMenu.orig_Start orig, QuitToMenu self)
         {
             ResourcesLoader.Instance.Destroy();
+            ModMenu.NeedReorder = true;
+            ModMenu.isControllerBindsShown = !ModMenu.isControllerBindsShown;
+            ModMenu.isKeyboardBindsShown = !ModMenu.isKeyboardBindsShown;
             return orig(self);
         }
 
