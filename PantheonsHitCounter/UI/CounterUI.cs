@@ -85,7 +85,7 @@ namespace PantheonsHitCounter.UI
                 bossPanel.GetImage("BossImageSelected").SetActive(activeSplit);
                 bossPanel.GetImage("BossImage").UpdateImage(bossImg, new Rect(0, 0, bossImg.width, bossImg.height));
                 bossPanel.GetImage("BossImageAnonymized").SetActive(anonymizeSplit);
-                bossPanel.GetImage("BossImage").SetActive(!anonymizeSplit);
+                bossPanel.GetImage("BossImage").SetActive(!anonymizeSplit && _panel.Active);
                 bossPanel.GetText("BossName").UpdateText(anonymizeSplit ? "????" : boss.name);
                 bossPanel.GetText("BossHits").UpdateText(anonymizeSplit ? "?" : boss.hits + "");
                 bossPanel.GetText("BossHitsPB").UpdateText(anonymizeSplit ? "?" : boss.hitsPb < 0 ? "-" : boss.hitsPb + "");

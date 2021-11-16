@@ -22,19 +22,6 @@ namespace PantheonsHitCounter
             get { return bosses.Any(boss => boss.hitsPb > -1) ? bosses.Sum(boss => Math.Max(0, boss.hitsPb)) : -1; }
         }
 
-        public Pantheon(int number)
-        {
-            this.number = number;
-            switch (number)
-            {
-                case 1: name = "Pantheon of the Master"; break;
-                case 2: name = "Pantheon of the Artist"; break;
-                case 3: name = "Pantheon of the Sage"; break;
-                case 4: name = "Pantheon of the Knight"; break;
-                default: name = "Pantheon of Hallownest"; break;
-            }
-        }
-
         public static int FindPantheon(List<Pantheon> pantheons, string previousSceneName, string nextSceneName)
         {
             // not a pantheon
