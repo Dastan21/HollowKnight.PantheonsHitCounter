@@ -64,8 +64,6 @@ namespace PantheonsHitCounter.UI
                     var split = res.Split('.');
                     var internalName = split[split.Length - 2];
                     images.Add(internalName, texture);
-
-                    PantheonsHitCounter.instance.Log("Loaded image: " + internalName);
                 }
                 catch (Exception e)
                 {
@@ -73,7 +71,7 @@ namespace PantheonsHitCounter.UI
                 }
             }
             
-            PantheonsHitCounter.instance.Log("Resources loaded.");
+            PantheonsHitCounter.instance.Log("Resources loaded");
         }
 
         public static ResourcesLoader Instance

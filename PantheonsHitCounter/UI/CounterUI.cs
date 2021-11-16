@@ -7,9 +7,11 @@ namespace PantheonsHitCounter.UI
     {
         private static CanvasPanel _panel;
         // Images
-        private const string BackgroundImage = "background";
-        private const string SplitBossImage = "split_boss";
-        private const string SelectedBossImage = "selected";
+        private const string BackgroundImage = "Background";
+        private const string SplitBossImage = "SplitBoss";
+        private const string SelectedBossImage = "SelectedBoss";
+        private const string SelectedSplitImage = "SelectedSplit";
+        private const string AnonymizedBossImage = "AnonymizedBoss";
         // Dimensions
         private const float BackgroundWidth = 360f;
         private const float TitleHeight = 60f;
@@ -29,23 +31,25 @@ namespace PantheonsHitCounter.UI
             _panel.AddPanel("PHC-Title", null, new Vector2(0, TitleHeight), Vector2.zero, new Rect(0, 0, BackgroundWidth, TitleHeight));
             var titlePanel = _panel.GetPanel("PHC-Title");
             titlePanel.AddText("PantheonName", pantheon.name, new Vector2(1.2f * Margin, 0), Vector2.zero, ResourcesLoader.Instance.trajanBold, 20);
-            titlePanel.AddText("PantheonBoss", $"{pantheon.bossNumber + 1}/{bosses.Count}", new Vector2(1.2f * Margin, TitleHeight - 1.2f * Margin), Vector2.zero, ResourcesLoader.Instance.trajanBold, 20);
+            titlePanel.AddText("PantheonBoss", $"-/-", new Vector2(1.2f * Margin, TitleHeight - 1.2f * Margin), Vector2.zero, ResourcesLoader.Instance.trajanBold, 20);
             // Bosses Split
             var splitImg = ResourcesLoader.Instance.images[SplitBossImage];
-            var selectedImg = ResourcesLoader.Instance.images[SelectedBossImage];
+            var selectedBossImg = ResourcesLoader.Instance.images[SelectedBossImage];
+            var selectedSplitImg = ResourcesLoader.Instance.images[SelectedSplitImage];
+            var anonymizedBossImg = ResourcesLoader.Instance.images[AnonymizedBossImage];
             for (var b = 0; b < 4; b++)
             {
                 _panel.AddPanel("PHC-BossSplit-" + b, null, new Vector2(Margin, 2 * TitleHeight + b * SplitHeight), Vector2.zero, new Rect(0, TitleHeight, BackgroundWidth, SplitHeight));
                 var bossPanel = _panel.GetPanel("PHC-BossSplit-" + b);
                 bossPanel.AddImage("BossSplitImage-" + b, splitImg, new Vector2(0, 0), new Vector2(splitImg.width, splitImg.height), new Rect(0, 0, splitImg.width, splitImg.height));
-                var boss = bosses[b + pantheon.bossNumber];
-                var bossImg = ResourcesLoader.Instance.images[boss.name.Replace(" ", "_")];
-                bossPanel.AddImage("BossSplitSelected", selectedImg, new Vector2(Margin, 0.8f * Margin), new Vector2(BossImageSize, BossImageSize), new Rect(0, 0, selectedImg.width, selectedImg.height));
-                if (b != 0) bossPanel.GetImage("BossSplitSelected").SetActive(false);
+                var bossImg = ResourcesLoader.Instance.images[bosses[b + pantheon.bossNumber].name.Replace(" ", "_")];
+                bossPanel.AddImage("BossImageSelected", selectedBossImg, new Vector2(Margin, 0.8f * Margin), new Vector2(BossImageSize, BossImageSize), new Rect(0, 0, selectedBossImg.width, selectedBossImg.height));
+                bossPanel.AddImage("BossImageAnonymized", anonymizedBossImg, new Vector2(Margin, 0.8f * Margin), new Vector2(BossImageSize, BossImageSize), new Rect(0, 0, anonymizedBossImg.width, anonymizedBossImg.height));
                 bossPanel.AddImage("BossImage", bossImg, new Vector2(Margin, 0.8f * Margin), new Vector2(BossImageSize, BossImageSize), new Rect(0, 0, bossImg.width, bossImg.height));
-                bossPanel.AddText("BossName", boss.name, new Vector2(BossImageSize + 1.3f * Margin, Margin), Vector2.zero, ResourcesLoader.Instance.trajanBold, 16);
-                bossPanel.AddText("BossHits", boss.hits + "", new Vector2(BackgroundWidth - BossHitsWidth - Margin, SplitHeight - Margin), Vector2.zero, ResourcesLoader.Instance.trajanBold, 20);
-                bossPanel.AddText("BossHitsPB", boss.hitsPb < 0 ? "-" : boss.hitsPb + "", new Vector2(BackgroundWidth - BossHitsWidth + Margin, SplitHeight - Margin), Vector2.zero, ResourcesLoader.Instance.trajanBold, 20);
+                bossPanel.AddText("BossName", "-", new Vector2(BossImageSize + 1.3f * Margin, Margin), Vector2.zero, ResourcesLoader.Instance.trajanBold, 16);
+                bossPanel.AddText("BossHits", "-", new Vector2(BackgroundWidth - BossHitsWidth - Margin, SplitHeight - Margin), Vector2.zero, ResourcesLoader.Instance.trajanBold, 20);
+                bossPanel.AddText("BossHitsPB", "-", new Vector2(BackgroundWidth - BossHitsWidth + Margin, SplitHeight - Margin), Vector2.zero, ResourcesLoader.Instance.trajanBold, 20);
+                bossPanel.AddImage("BossSplitSelected", selectedSplitImg, new Vector2(-Margin, 0), new Vector2(selectedSplitImg.width, selectedSplitImg.height), new Rect(0, 0, selectedSplitImg.width, selectedSplitImg.height));
             }
             // Total panel
             _panel.AddPanel("PHC-Total", null, new Vector2(Margin, 2 * TitleHeight + 4 * SplitHeight), Vector2.zero, new Rect(0, TitleHeight, BackgroundWidth, SplitHeight));
@@ -58,6 +62,7 @@ namespace PantheonsHitCounter.UI
             
             
             _panel.FixRenderOrder();
+            UpdateUI(pantheon);
         }
 
         public static void UpdateUI(Pantheon pantheon)
@@ -75,11 +80,16 @@ namespace PantheonsHitCounter.UI
                 var bossPanel = _panel.GetPanel("PHC-BossSplit-" + b);
                 var boss = bosses[b + currentBossNumber];
                 var bossImg = ResourcesLoader.Instance.images[boss.name.Replace(" ", "_")];
-                bossPanel.GetImage("BossSplitSelected").SetActive(b == GetSelectedSplit(pantheon.bossNumber, bosses.Count) && _panel.Active);
+                var activeSplit = b == GetSelectedSplit(pantheon.bossNumber, bosses.Count) && _panel.Active;
+                var anonymizeSplit = b > GetSelectedSplit(pantheon.bossNumber, bosses.Count) && _panel.Active && PantheonsHitCounter.instance.globalData.anonymize;
+                bossPanel.GetImage("BossImageSelected").SetActive(activeSplit);
                 bossPanel.GetImage("BossImage").UpdateImage(bossImg, new Rect(0, 0, bossImg.width, bossImg.height));
-                bossPanel.GetText("BossName").UpdateText(boss.name);
-                bossPanel.GetText("BossHits").UpdateText(boss.hits + "");
-                bossPanel.GetText("BossHitsPB").UpdateText(boss.hitsPb < 0 ? "-" : boss.hitsPb + "");
+                bossPanel.GetImage("BossImageAnonymized").SetActive(anonymizeSplit);
+                bossPanel.GetImage("BossImage").SetActive(!anonymizeSplit);
+                bossPanel.GetText("BossName").UpdateText(anonymizeSplit ? "????" : boss.name);
+                bossPanel.GetText("BossHits").UpdateText(anonymizeSplit ? "?" : boss.hits + "");
+                bossPanel.GetText("BossHitsPB").UpdateText(anonymizeSplit ? "?" : boss.hitsPb < 0 ? "-" : boss.hitsPb + "");
+                bossPanel.GetImage("BossSplitSelected").SetActive(activeSplit);
             }
             // Total panel
             _panel.GetPanel("PHC-Total").GetText("TotalHits").UpdateText(pantheon.TotalHits + "");

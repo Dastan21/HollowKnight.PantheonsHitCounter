@@ -38,7 +38,6 @@ namespace PantheonsHitCounter
 
         public static int FindPantheon(List<Pantheon> pantheons, string previousSceneName, string nextSceneName)
         {
-            PantheonsHitCounter.instance.Log($"{previousSceneName} -> {nextSceneName}");
             // not a pantheon
             if (previousSceneName != "GG_Boss_Door_Entrance" && previousSceneName != "GG_Atrium_Roof") return -1;
             // pantheon 5
