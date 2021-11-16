@@ -7,7 +7,6 @@ using Modding.Menu.Config;
 using PantheonsHitCounter.UI;
 using UnityEngine;
 using UnityEngine.UI;
-using Logger = Modding.Logger;
 using Object = UnityEngine.Object;
 
 namespace PantheonsHitCounter {

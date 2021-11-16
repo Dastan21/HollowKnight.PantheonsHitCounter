@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-// Inspired from https://github.com/seresharp/DebugMod/blob/master/Source/CanvasPanel.cs
+// https://github.com/seresharp/DebugMod/blob/master/Source/CanvasPanel.cs
 namespace PantheonsHitCounter.UI
 {
     public class CanvasPanel
