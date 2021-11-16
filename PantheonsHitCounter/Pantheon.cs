@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Modding;
 using Newtonsoft.Json;
 
 namespace PantheonsHitCounter
@@ -22,19 +23,42 @@ namespace PantheonsHitCounter
             get { return bosses.Any(boss => boss.hitsPb > -1) ? bosses.Sum(boss => Math.Max(0, boss.hitsPb)) : -1; }
         }
 
-        public static int FindPantheon(string previousSceneName, string nextSceneName)
+        public Pantheon(int number)
         {
-            if (previousSceneName == "GG_Atrium_Roof" && nextSceneName == "GG_Vengefly_V") return 5;
-            
-            switch (nextSceneName)
+            this.number = number;
+            switch (number)
             {
-                case "GG_Vengefly": return 1;
-                case "GG_Ghost_Xero": return 2;
-                case "GG_Hive_Knight": return 3;
-                case "GG_Crystal_Guardian_2": return 4;
+                case 1: name = "Pantheon of the Master"; break;
+                case 2: name = "Pantheon of the Artist"; break;
+                case 3: name = "Pantheon of the Sage"; break;
+                case 4: name = "Pantheon of the Knight"; break;
+                default: name = "Pantheon of Hallownest"; break;
             }
+        }
+
+        public static int FindPantheon(List<Pantheon> pantheons, string previousSceneName, string nextSceneName)
+        {
+            PantheonsHitCounter.instance.Log($"{previousSceneName} -> {nextSceneName}");
+            // not a pantheon
+            if (previousSceneName != "GG_Boss_Door_Entrance" && previousSceneName != "GG_Atrium_Roof") return -1;
+            // pantheon 5
+            if (previousSceneName == "GG_Atrium_Roof" && pantheons[4].bosses.Exists(b => b.sceneName == nextSceneName)) return 5;
             
-            return 0;
+            // pantheon 1-4
+            if (previousSceneName == "GG_Boss_Door_Entrance")
+            {
+                if (pantheons[0].bosses.Exists(b => b.sceneName.Equals(nextSceneName))) return 1;
+                if (pantheons[1].bosses.Exists(b => b.sceneName.Equals(nextSceneName))) return 2;
+                if (pantheons[2].bosses.Exists(b => b.sceneName.Equals(nextSceneName))) return 3;
+                if (pantheons[3].bosses.Exists(b => b.sceneName.Equals(nextSceneName))) return 4;
+                PantheonsHitCounter.instance.Log(pantheons[3].bosses.Count);
+                foreach (var boss in pantheons[3].bosses)
+                {
+                    PantheonsHitCounter.instance.Log($"{boss.sceneName} - {nextSceneName}");
+                }
+            }
+
+            return -1;
         }
 
         public void ResetCounter()
@@ -50,7 +74,7 @@ namespace PantheonsHitCounter
                 boss.hitsPb = -1;
         }
 
-        public Boss GetBossBySceneName(string sceneName) => bosses.Find(boss => boss.sceneName == sceneName);
+        public Boss GetBossBySceneName(string sceneName) => bosses.Find(boss => boss.sceneName.Equals(sceneName));
         public void NextBoss()
         {
             if (bossNumber < bosses.Count - 1) bossNumber++;

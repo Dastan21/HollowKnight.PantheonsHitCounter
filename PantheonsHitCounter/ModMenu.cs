@@ -84,7 +84,7 @@ namespace PantheonsHitCounter {
             _pantheonSelector.gameObject.transform.Find("CursorLeft").GetComponent<RectTransform>().anchoredPosition = new Vector2(280f, 0f);
             _pantheonSelector.gameObject.transform.Find("Description").GetComponent<RectTransform>().anchoredPosition = new Vector2(480f, 0f);
 
-            //make text obj smaller so text can left align properly
+            // make text obj smaller so text can left align properly
             var textObj = _pantheonSelector.gameObject.transform.Find("Text").gameObject;
             textObj.GetComponent<RectTransform>().sizeDelta = new Vector2(-700, 0);
             textObj.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
@@ -105,7 +105,7 @@ namespace PantheonsHitCounter {
             layout.ChangeColumns(1, 0.25f, l);
             
             area.AddTextPanel("Note",
-                new RelVector2(new Vector2(850f, 60f)),
+                new RelVector2(new Vector2(850f, 40f)),
                 new TextPanelConfig{
                     Text = "Note: Reset works only in-game",
                     Size = 25,
