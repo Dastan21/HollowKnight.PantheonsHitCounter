@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-// Inspired from https://github.com/seresharp/DebugMod/blob/master/Source/CanvasImage.cs
+// https://github.com/seresharp/DebugMod/blob/master/Source/CanvasImage.cs
 namespace PantheonsHitCounter.UI
 {
     public class CanvasImage
     {
         private GameObject _imageObj;
-        private bool _active;
 
         public CanvasImage(GameObject parent, Texture2D tex, Vector2 pos, Vector2 size, Rect subSprite)
         {
@@ -35,8 +34,6 @@ namespace PantheonsHitCounter.UI
             imageTransform.SetScaleY(size.y / subSprite.height);
 
             Object.DontDestroyOnLoad(_imageObj);
-
-            _active = true;
         }
 
         public void UpdateImage(Texture2D tex, Rect subSection)
@@ -60,7 +57,6 @@ namespace PantheonsHitCounter.UI
             if (_imageObj == null) return;
             
             _imageObj.SetActive(b);
-            _active = b;
         }
     }
 }

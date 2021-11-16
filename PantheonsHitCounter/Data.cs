@@ -52,6 +52,8 @@ namespace PantheonsHitCounter
         public KeyBinds keybinds = new KeyBinds();
         [JsonConverter(typeof(PlayerActionSetConverter))]
         public ButtonBinds buttonbinds = new ButtonBinds();
+        
+        public bool anonymize;
     }
 
     public class KeyBinds : PlayerActionSet

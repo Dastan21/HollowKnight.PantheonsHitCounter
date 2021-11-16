@@ -12,9 +12,9 @@ using Object = UnityEngine.Object;
 namespace PantheonsHitCounter {
     public class ModMenu
     {
-        private static MenuScreen _modsMenu;
         public static MenuScreen mainMenu;
-        private static MenuOptionHorizontal _pantheonSelector, _stateSelector;
+        private static MenuScreen _modsMenu;
+        private static MenuOptionHorizontal _pantheonSelector, _stateSelector, _anonymizeSelector;
         private static ModToggleDelegates _stateToggle;
         private static int _selectedPantheon;
         private static readonly string[] ToggleState = { "Disabled", "Enabled" };
@@ -30,6 +30,7 @@ namespace PantheonsHitCounter {
         private static void AddMenuOptions(ContentArea area)
         {
             AddStateOption(area);
+            AddAnonymizeOptions(area);
             AddResetOptions(area);
             AddBindingsOptions(area);
         }
@@ -54,6 +55,28 @@ namespace PantheonsHitCounter {
                     Style = HorizontalOptionStyle.VanillaStyle
                 },
                 out _stateSelector
+            );
+        }
+        
+        private static void AddAnonymizeOptions(ContentArea area)
+        {
+            area.AddHorizontalOption(
+                "Anonymize",
+                new HorizontalOptionConfig
+                {
+                    Label = "Anonymize bosses",
+                    Description = new DescriptionInfo
+                    {
+                        Text = "Anonymize next bosses infos",
+                        Style = DescriptionStyle.HorizOptionSingleLineVanillaStyle
+                    },
+                    Options = ToggleState,
+                    ApplySetting = (_, i) => PantheonsHitCounter.instance.globalData.anonymize = i == 1,
+                    RefreshSetting = (s, _) => s.optionList.SetOptionTo(PantheonsHitCounter.instance.globalData.anonymize ? 1 : 0),
+                    CancelAction = GoToModListMenu,
+                    Style = HorizontalOptionStyle.VanillaStyle
+                },
+                out _anonymizeSelector
             );
         }
 
@@ -84,7 +107,7 @@ namespace PantheonsHitCounter {
             _pantheonSelector.gameObject.transform.Find("CursorLeft").GetComponent<RectTransform>().anchoredPosition = new Vector2(280f, 0f);
             _pantheonSelector.gameObject.transform.Find("Description").GetComponent<RectTransform>().anchoredPosition = new Vector2(480f, 0f);
 
-            //make text obj smaller so text can left align properly
+            // make text obj smaller so text can left align properly
             var textObj = _pantheonSelector.gameObject.transform.Find("Text").gameObject;
             textObj.GetComponent<RectTransform>().sizeDelta = new Vector2(-700, 0);
             textObj.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
@@ -105,15 +128,16 @@ namespace PantheonsHitCounter {
             layout.ChangeColumns(1, 0.25f, l);
             
             area.AddTextPanel("Note",
-                new RelVector2(new Vector2(850f, 60f)),
+                new RelVector2(new Vector2(850f, 40f)),
                 new TextPanelConfig{
-                    Text = "Note: Reset works only in-game",
+                    Text = "Note: Reset PBs of a pantheon works only in-game",
                     Size = 25,
                     Font = TextPanelConfig.TextFont.TrajanRegular,
                     Anchor = TextAnchor.MiddleCenter
                 }
             );
         }
+
         private static void AddBindingsOptions(ContentArea area)
         {
             area.AddMenuButton("SectionBindingsKeyboard",
@@ -247,6 +271,7 @@ namespace PantheonsHitCounter {
         public static void RefreshOptions()
         {
             if(_stateSelector != null) _stateSelector.menuSetting.RefreshValueFromGameSettings();
+            if(_anonymizeSelector != null) _anonymizeSelector.menuSetting.RefreshValueFromGameSettings();
             if(_pantheonSelector != null) _pantheonSelector.menuSetting.RefreshValueFromGameSettings();
         }
 
@@ -381,7 +406,7 @@ namespace PantheonsHitCounter {
             
             var index = 2;
             var itemAdvance = new RelVector2(new Vector2(0.0f, -105f));
-            var noteItem = new RelVector2(new Vector2(0.0f, -105f));
+            var margin = new RelVector2(new Vector2(0.0f, -210f));
             var start = new AnchoredPosition
             {
                 ChildAnchor = new Vector2(0.5f, 1f),
@@ -391,7 +416,7 @@ namespace PantheonsHitCounter {
 
             foreach (var menuOption in AllMenuOptions.Where(x => x.activeInHierarchy))
             {
-                (start + noteItem + itemAdvance * new Vector2Int(index, index)).Reposition(menuOption.gameObject.GetComponent<RectTransform>());
+                (start + margin + itemAdvance * new Vector2Int(index, index)).Reposition(menuOption.gameObject.GetComponent<RectTransform>());
                 index += 1;
             }
         }

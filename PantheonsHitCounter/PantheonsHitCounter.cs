@@ -17,18 +17,19 @@ namespace PantheonsHitCounter
         public GlobalData globalData = new GlobalData();
         public List<Pantheon> pantheons;
         public Pantheon currentPantheon;
+        private bool _loaded;
         private string _sceneName;
         private bool _inPantheon;
         private bool _inTransition;
         internal static PantheonsHitCounter instance;
         
         private static readonly string PantheonsBossesJsonPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "/PantheonsBosses.json";
-        private static readonly string[] TransitionScenes = { "GG_Spa", "GG_Engine", "GG_Engine_Root", "GG_Unn", "GG_Wyrm", "GG_End_Sequence" };
+        private static readonly string[] TransitionScenes = { "GG_Spa", "GG_Engine", "GG_Engine_Prime", "GG_Engine_Root", "GG_Unn", "GG_Wyrm", "GG_End_Sequence" };
         private static readonly string[] GodhomeScenes = { "GG_Atrium", "GG_Atrium_Roof" };
         private static readonly string[] CompletedScene = { "GG_End_Sequence", "End_Game_Completion" };
         
         public PantheonsHitCounter() : base("Pantheons Hit Counter") {}
-        public override string GetVersion() => "1.0.1";
+        public override string GetVersion() => "1.1.0";
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
         public void OnLoadLocal(LocalData data) => _localData = data;
@@ -40,45 +41,45 @@ namespace PantheonsHitCounter
         public override void Initialize()
         {
             instance = this;
-
+            
             ModHooks.SavegameLoadHook += LoadPBs;
             On.QuitToMenu.Start += OnQuitToMenu;
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
             ModHooks.TakeHealthHook += OnHitTaken;
             ModHooks.HeroUpdateHook += OnHeroUpdate;
-
-            ResourcesLoader.Instance.LoadResources();
-
-            LoadPantheonsBosses();
-
+            On.BossSequenceDoor.Start += OnRandomizedPantheon;
             On.UIManager.ShowMenu += ReorderButtons;
-        }
-        
 
-        private static IEnumerator ReorderButtons(On.UIManager.orig_ShowMenu orig, UIManager self, MenuScreen menu)
-        {
-            //need to do this probably something about components not being active in hierarchy and so the logic doesnt work
-            if (menu == ModMenu.mainMenu)
-                GameManager.instance.StartCoroutine(ReorderAfterFrame());
-            yield return orig(self, menu);
-
+            if (_loaded) return;
+            _loaded = true;
+            
+            ResourcesLoader.Instance.LoadResources();
+            LoadPantheonsBosses();
         }
 
-        private static IEnumerator ReorderAfterFrame()
+        private void OnRandomizedPantheon(On.BossSequenceDoor.orig_Start orig, BossSequenceDoor self)
         {
-            yield return null;
-            ModMenu.Reorder();
-            ModMenu.needReorder = false;
+            orig(self);
+            
+            var bossSequence = self.bossSequence;
+            var number = int.Parse(self.descriptionKey.Replace("UI_CHALLENGE_DESC_", ""));
+            var pantheon = pantheons[number - 1];
+            var bosses = new List<Boss>();
+            
+            for (var b = 0; b < bossSequence.Count; b++)
+            {
+                var bossScene = bossSequence.GetBossScene(b);
+                if (TransitionScenes.Contains(bossScene.sceneName)) continue;
 
-        }
+                var boss = new Boss
+                {
+                    sceneName = bossScene.sceneName,
+                    name = pantheon.GetBossBySceneName(bossScene.sceneName).name
+                };
+                bosses.Add(boss);
+            }
 
-        private static IEnumerator OnQuitToMenu(On.QuitToMenu.orig_Start orig, QuitToMenu self)
-        {
-            ResourcesLoader.Instance.Destroy();
-            ModMenu.needReorder = true;
-            ModMenu.isControllerBindsShown = !ModMenu.isControllerBindsShown;
-            ModMenu.isKeyboardBindsShown = !ModMenu.isKeyboardBindsShown;
-            return orig(self);
+            pantheon.bosses = bosses;
         }
 
         private void LoadPBs(int _)
@@ -102,7 +103,7 @@ namespace PantheonsHitCounter
         private string OnSceneLoad(string sceneName)
         {
             if (_inPantheon) OnNextBoss(sceneName);
-            else OnEnterPantheon(Pantheon.FindPantheon(_sceneName, sceneName));
+            else OnEnterPantheon(Pantheon.FindPantheon(pantheons, _sceneName, sceneName));
 
             _sceneName = sceneName;
             return sceneName;
@@ -126,7 +127,7 @@ namespace PantheonsHitCounter
             _inPantheon = true;
 
             currentPantheon.ResetCounter();
-            
+
             if (ResourcesLoader.Instance.canvas) ResourcesLoader.Instance.Destroy();
             ResourcesLoader.Instance.BuildMenus(currentPantheon);
             
@@ -193,7 +194,7 @@ namespace PantheonsHitCounter
                 if (json == null) throw new Exception($"Cannot read PantheonsBosses.json. Please make sure it is in {GetName()} mod folder.");
             }
             pantheons = JsonConvert.DeserializeObject<List<Pantheon>>(json);
-
+            
             Log("Pantheons bosses loaded");
         }
         
@@ -217,6 +218,32 @@ namespace PantheonsHitCounter
             }
         }
 
+        private static IEnumerator ReorderButtons(On.UIManager.orig_ShowMenu orig, UIManager self, MenuScreen menu)
+        {
+            // need to do this, probably something about components not being active in hierarchy and so the logic doesn't work
+            if (menu == ModMenu.mainMenu)
+                GameManager.instance.StartCoroutine(ReorderAfterFrame());
+            yield return orig(self, menu);
+
+        }
+
+        private static IEnumerator ReorderAfterFrame()
+        {
+            yield return null;
+            ModMenu.Reorder();
+            ModMenu.needReorder = false;
+
+        }
+
+        private static IEnumerator OnQuitToMenu(On.QuitToMenu.orig_Start orig, QuitToMenu self)
+        {
+            ResourcesLoader.Instance.Destroy();
+            ModMenu.needReorder = true;
+            ModMenu.isControllerBindsShown = !ModMenu.isControllerBindsShown;
+            ModMenu.isKeyboardBindsShown = !ModMenu.isKeyboardBindsShown;
+            return orig(self);
+        }
+        
         public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle)
         {
             var menu = ModMenu.CreateMenuScreen(modListMenu, toggle);
@@ -226,13 +253,13 @@ namespace PantheonsHitCounter
 
         public void Unload()
         {
-            pantheons = null;
-            
             ModHooks.SavegameLoadHook -= LoadPBs;
             On.QuitToMenu.Start -= OnQuitToMenu;
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
             ModHooks.TakeHealthHook -= OnHitTaken;
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
+            On.BossSequenceDoor.Start -= OnRandomizedPantheon;
+            On.UIManager.ShowMenu -= ReorderButtons;
         }
     }
 }

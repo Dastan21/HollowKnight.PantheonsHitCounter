@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-// Inspired from https://github.com/seresharp/DebugMod/blob/master/Source/CanvasText.cs
+// https://github.com/seresharp/DebugMod/blob/master/Source/CanvasText.cs
 namespace PantheonsHitCounter.UI
 {
     public class CanvasText
     {
         private GameObject _textObj;
-        private bool _active;
 
         public CanvasText(GameObject parent, Vector2 pos, Vector2 size, Font font, string text, int fontSize = 13, FontStyle style = FontStyle.Normal, TextAnchor alignment = TextAnchor.UpperLeft)
         {
@@ -38,8 +37,6 @@ namespace PantheonsHitCounter.UI
             textTransform.anchorMax = position;
 
             Object.DontDestroyOnLoad(_textObj);
-
-            _active = true;
         }
 
         public void UpdateText(string text)
@@ -59,7 +56,6 @@ namespace PantheonsHitCounter.UI
             if (_textObj == null) return;
             
             _textObj.SetActive(b);
-            _active = b;
         }
         
         public void Destroy() => Object.Destroy(_textObj);
