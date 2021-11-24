@@ -124,7 +124,7 @@ namespace PantheonsHitCounter {
                 }, out _
             );
             
-            l.x = new RelLength(1920f);
+            l.x = new RelLength(0f);
             layout.ChangeColumns(1, 0.25f, l);
             
             area.AddTextPanel("Note",
