@@ -60,6 +60,7 @@ namespace PantheonsHitCounter
         }
 
         public Boss GetBossBySceneName(string sceneName) => bosses.Find(boss => boss.sceneName.Equals(sceneName));
+        public Boss GetBossByName(string bossName) => bosses.Find(boss => boss.name.Equals(bossName));
         public void NextBoss()
         {
             if (bossNumber < bosses.Count - 1) bossNumber++;

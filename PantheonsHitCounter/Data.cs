@@ -48,12 +48,16 @@ namespace PantheonsHitCounter
     [Serializable]
     public class GlobalData
     {
+        public static int defaultSplitsNumber = 5;
+        
         [JsonConverter(typeof(PlayerActionSetConverter))]
         public KeyBinds keybinds = new KeyBinds();
         [JsonConverter(typeof(PlayerActionSetConverter))]
         public ButtonBinds buttonbinds = new ButtonBinds();
         
         public bool anonymize;
+        public bool compactMode;
+        public int totalSplits = defaultSplitsNumber;
     }
 
     public class KeyBinds : PlayerActionSet
