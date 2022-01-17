@@ -62,6 +62,16 @@ namespace PantheonsHitCounter
                     },
                     () => PantheonsHitCounter.instance.globalData.compactMode ? 1 : 0
                 ),
+                new HorizontalOption(
+                    "Anonymize",
+                    "Hides bosses icon, hits and PB",
+                    new []{ "Off", "On" },
+                    anonymize => {
+                        PantheonsHitCounter.instance.globalData.anonymize = anonymize == 1;
+                        PantheonsHitCounter.instance.ToggleCurrentCounter();
+                    },
+                    () => PantheonsHitCounter.instance.globalData.compactMode ? 1 : 0
+                ),
                 new MenuButton(
                     "Keyboard bindings",
                     "Click to show keyboard bindings",
