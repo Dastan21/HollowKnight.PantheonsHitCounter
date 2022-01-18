@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,7 +31,7 @@ namespace PantheonsHitCounter
         public const int CompactSplitsCountMax = 22;
         
         public PantheonsHitCounter() : base("Pantheons Hit Counter") {}
-        public override string GetVersion() => "1.3.0";
+        public override string GetVersion() => "1.3.1";
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
         public void OnLoadLocal(LocalData data) => _localData = data;
