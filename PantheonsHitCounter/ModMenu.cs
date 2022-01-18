@@ -46,7 +46,6 @@ namespace PantheonsHitCounter
                     maxValue = PantheonsHitCounter.instance.globalData.compactMode ? PantheonsHitCounter.CompactSplitsCountMax : PantheonsHitCounter.DefaultSplitsCountMax,
                     wholeNumbers = true
                 },
-                new TextPanel("(Can be slow with lots of splits)", fontSize: 25),
                 new HorizontalOption(
                     "Counter mode",
                     "Interface mode of the counter",
@@ -70,7 +69,17 @@ namespace PantheonsHitCounter
                         PantheonsHitCounter.instance.globalData.anonymize = anonymize == 1;
                         PantheonsHitCounter.instance.ToggleCurrentCounter();
                     },
-                    () => PantheonsHitCounter.instance.globalData.compactMode ? 1 : 0
+                    () => PantheonsHitCounter.instance.globalData.anonymize ? 1 : 0
+                ),
+                new HorizontalOption(
+                    "Translation",
+                    "Enables local translation",
+                    new []{ "Off", "On" },
+                    translated => {
+                        PantheonsHitCounter.instance.globalData.translated = translated == 1;
+                        PantheonsHitCounter.instance.ToggleCurrentCounter();
+                    },
+                    () => PantheonsHitCounter.instance.globalData.translated ? 1 : 0
                 ),
                 new MenuButton(
                     "Keyboard bindings",

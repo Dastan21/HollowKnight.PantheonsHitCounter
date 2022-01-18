@@ -55,8 +55,9 @@ namespace PantheonsHitCounter
         [JsonConverter(typeof(PlayerActionSetConverter))]
         public ButtonBinds buttonbinds = new ButtonBinds();
         
-        public bool anonymize;
         public bool compactMode;
+        public bool anonymize;
+        public bool translated = true;
         public int totalSplits = defaultSplitsNumber;
     }
 

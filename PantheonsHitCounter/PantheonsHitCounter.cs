@@ -28,10 +28,10 @@ namespace PantheonsHitCounter
         private static readonly string[] CompletedScene = { "GG_End_Sequence", "End_Game_Completion" };
         public const int SplitsMin = 3;
         public const int DefaultSplitsCountMax = 10;
-        public const int CompactSplitsCountMax = 30;
+        public const int CompactSplitsCountMax = 22;
         
         public PantheonsHitCounter() : base("Pantheons Hit Counter") {}
-        public override string GetVersion() => "1.2.0";
+        public override string GetVersion() => "1.3.0";
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
         public void OnLoadLocal(LocalData data) => _localData = data;
@@ -65,6 +65,8 @@ namespace PantheonsHitCounter
         private void OnRandomizedPantheon(On.BossSequenceDoor.orig_Start orig, BossSequenceDoor self)
         {
             orig(self);
+
+            if (!self.descriptionKey.StartsWith("UI_CHALLENGE_DESC_")) return;
             
             var bossSequence = self.bossSequence;
             var number = int.Parse(self.descriptionKey.Replace("UI_CHALLENGE_DESC_", ""));
@@ -79,6 +81,7 @@ namespace PantheonsHitCounter
                 var boss = pantheon.GetBossBySceneName(bossScene.sceneName);
                 var newBoss = new Boss
                 {
+                    key = boss.key,
                     sceneName = bossScene.sceneName,
                     name = boss.name,
                     hitsPb = boss.hitsPb

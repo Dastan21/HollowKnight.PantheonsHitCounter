@@ -76,6 +76,7 @@ namespace PantheonsHitCounter
     [Serializable]
     public class Boss
     {
+        [JsonProperty("key")] public string key;
         [JsonProperty("name")] public string name;
         [JsonProperty("scene")] public string sceneName;
         public int hits;
