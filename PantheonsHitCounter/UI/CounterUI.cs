@@ -10,8 +10,8 @@ namespace PantheonsHitCounter.UI
         private static CanvasPanel _panel;
         private static bool _compactMode;
         private const string PantheonsLanguageKey = "UI_CHALLENGE_TITLE";
-        private static readonly string[] NoKeySuper = { "HK_PRIME" };
-        private static readonly string[] NoKeySub = { "ABSOLUTE_RADIANCE", "HK_PRIME", "GREY_PRINCE" };
+        private static readonly string[] NoKeySuper = { "HK_PRIME", "NAME_HORNET_1", "NAME_HORNET_2" };
+        private static readonly string[] NoKeySub = { "ABSOLUTE_RADIANCE", "HK_PRIME", "GREY_PRINCE", "NAME_HORNET_1", "NAME_HORNET_2" };
 
         // Default
         private const string EmptyImage = "Empty";
@@ -248,6 +248,13 @@ namespace PantheonsHitCounter.UI
             if (!NoKeySuper.Contains(boss.key)) bossName += " " + Lang.GetInternal($"{boss.key}_SUPER", "Titles");
             bossName += " " + Lang.GetInternal($"{(boss.key == "GREY_PRINCE" ? "ZOTE" : boss.key)}_MAIN", "Titles");
             if (!NoKeySub.Contains(boss.key)) bossName += " " + Lang.GetInternal($"{boss.key}_SUB", "Titles");
+            if (boss.key.StartsWith("NAME_HORNET")) bossName = Lang.GetInternal(boss.key, "CP3");
+
+            if (bossName.Contains("#!#"))
+            {
+                bossName = boss.name;
+                PantheonsHitCounter.instance.Log($"Failed boss translation for : {boss.key}");
+            }
 
             return bossName.Trim().ToLower();
         }

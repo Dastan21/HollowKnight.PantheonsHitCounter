@@ -31,7 +31,8 @@ namespace PantheonsHitCounter
         public const int CompactSplitsCountMax = 22;
         
         public PantheonsHitCounter() : base("Pantheons Hit Counter") {}
-        public override string GetVersion() => "1.3.1";
+        public override string GetVersion() => "1.3.2";
+        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
         public void OnLoadLocal(LocalData data) => _localData = data;
@@ -239,12 +240,6 @@ namespace PantheonsHitCounter
             if (IsMenuTitleScene()) return;
             if (ResourcesLoader.Instance.canvas) ResourcesLoader.Instance.Destroy();
             ResourcesLoader.Instance.BuildMenus(currentPantheon);
-        }
-        
-        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle)
-        {
-            var menu = ModMenu.GetMenu(modListMenu, toggle);
-            return menu;
         }
         
         public void Unload()
