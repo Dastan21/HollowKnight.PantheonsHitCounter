@@ -31,7 +31,7 @@ namespace PantheonsHitCounter
         public const int CompactSplitsCountMax = 22;
         
         public PantheonsHitCounter() : base("Pantheons Hit Counter") {}
-        public override string GetVersion() => "1.3.2";
+        public override string GetVersion() => "1.3.3";
         public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
@@ -90,7 +90,7 @@ namespace PantheonsHitCounter
                 bosses.Add(newBoss);
             }
 
-            pantheon.bosses = bosses;
+            pantheon.nextBosses = bosses;
         }
 
         private void LoadPBs(int _)
@@ -142,6 +142,7 @@ namespace PantheonsHitCounter
             _inPantheon = true;
 
             currentPantheon.ResetCounter();
+            currentPantheon.ReplaceBosses();
 
             if (ResourcesLoader.Instance.canvas) ResourcesLoader.Instance.Destroy();
             ResourcesLoader.Instance.BuildMenus(currentPantheon);

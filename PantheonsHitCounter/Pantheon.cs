@@ -11,6 +11,7 @@ namespace PantheonsHitCounter
         [JsonProperty("name")] public string name;
         [JsonProperty("number")] public int number;
         [JsonProperty("bosses")] public List<Boss> bosses;
+        public List<Boss> nextBosses;
         public int bossNumber;
 
         public int TotalHits
@@ -57,6 +58,12 @@ namespace PantheonsHitCounter
         {
             foreach (var boss in bosses)
                 boss.hitsPb = -1;
+        }
+
+        public void ReplaceBosses()
+        {
+            bosses = nextBosses;
+            nextBosses = null;
         }
 
         public Boss GetBossBySceneName(string sceneName) => bosses.Find(boss => boss.sceneName.Equals(sceneName));
