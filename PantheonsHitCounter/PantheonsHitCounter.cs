@@ -31,7 +31,7 @@ namespace PantheonsHitCounter
         public const int CompactSplitsCountMax = 22;
         
         public PantheonsHitCounter() : base("Pantheons Hit Counter") {}
-        public override string GetVersion() => "1.3.3";
+        public override string GetVersion() => "1.3.4";
         public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
