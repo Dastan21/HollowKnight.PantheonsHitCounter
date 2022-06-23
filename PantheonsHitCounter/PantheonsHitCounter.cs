@@ -196,6 +196,7 @@ namespace PantheonsHitCounter
                 bossData.hitsPb = boss.hitsPb;
             }
             Log($"Saved PBs for {pantheon.name}");
+            CounterUI.UpdateUI(currentPantheon);
         }
         
         private void LoadPantheonsBosses()
