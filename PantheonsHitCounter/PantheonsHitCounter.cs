@@ -31,7 +31,7 @@ namespace PantheonsHitCounter
         public const int CompactSplitsCountMax = 22;
         
         public PantheonsHitCounter() : base("Pantheons Hit Counter") {}
-        public override string GetVersion() => "1.3.4";
+        public override string GetVersion() => "1.3.5";
         public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
@@ -48,7 +48,7 @@ namespace PantheonsHitCounter
             
             ModHooks.SavegameLoadHook += LoadPBs;
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
-            ModHooks.TakeHealthHook += OnHitTaken;
+            ModHooks.AfterTakeDamageHook += OnHitTaken;
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.BossSequenceDoor.Start += OnRandomizedPantheon;
 
@@ -124,7 +124,7 @@ namespace PantheonsHitCounter
             return sceneName;
         }
 
-        private int OnHitTaken(int damage)
+        private int OnHitTaken(int hazardType, int damage)
         {
             if (!_inPantheon || _inTransition) return damage;
             
@@ -248,7 +248,7 @@ namespace PantheonsHitCounter
         {
             ModHooks.SavegameLoadHook -= LoadPBs;
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
-            ModHooks.TakeHealthHook -= OnHitTaken;
+            ModHooks.AfterTakeDamageHook -= OnHitTaken;
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
             On.BossSequenceDoor.Start -= OnRandomizedPantheon;
             
