@@ -39,13 +39,11 @@ namespace PantheonsHitCounter
                         PantheonsHitCounter.instance.ToggleCurrentCounter();
                     },
                     () => PantheonsHitCounter.instance.globalData.totalSplits,
+                    PantheonsHitCounter.SplitsMin,
+                    PantheonsHitCounter.instance.globalData.compactMode ? PantheonsHitCounter.CompactSplitsCountMax : PantheonsHitCounter.DefaultSplitsCountMax,
+                    true,
                     "CustomSlider-MaximumSplits"
-                )
-                {
-                    minValue = PantheonsHitCounter.SplitsMin,
-                    maxValue = PantheonsHitCounter.instance.globalData.compactMode ? PantheonsHitCounter.CompactSplitsCountMax : PantheonsHitCounter.DefaultSplitsCountMax,
-                    wholeNumbers = true
-                },
+                ),
                 new HorizontalOption(
                     "Counter mode",
                     "Interface mode of the counter",
