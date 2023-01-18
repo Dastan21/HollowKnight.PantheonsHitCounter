@@ -147,8 +147,7 @@ namespace PantheonsHitCounter
         public static MenuScreen GetMenu(MenuScreen lastMenu, ModToggleDelegates? toggle)
         {
             if (toggle == null) return null;
-            if (_menuRef == null)
-                _menuRef = PrepareMenu((ModToggleDelegates) toggle);
+            _menuRef = PrepareMenu((ModToggleDelegates) toggle);
             
             return _menuRef.GetMenuScreen(lastMenu);
         }
